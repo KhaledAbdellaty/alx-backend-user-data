@@ -42,6 +42,9 @@ def forbidden(error) -> str:
 
 @app.before_request
 def filtering_request():
+    """
+    A function that filtering of each request.
+    """
     if auth:
         paths_list = [
             '/api/v1/status/',

@@ -5,13 +5,14 @@ BasicAuth Module.
 from .auth import Auth
 import re
 
+
 class BasicAuth(Auth):
     """
     A class that inherits from Auth.
     """
 
     def extract_base64_authorization_header(
-            self, 
+            self,
             authorization_header: str) -> str:
         """A function that returns the Base64 part of
         the Authorization header for a Basic Authentication.

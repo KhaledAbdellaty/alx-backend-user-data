@@ -4,6 +4,7 @@ Template for all authentication system
 """
 from flask import request
 from typing import List, TypeVar
+import fnmatch
 
 
 class Auth:
@@ -19,7 +20,7 @@ class Auth:
             return True
         else:
             for excluded_path in excluded_paths:
-                if path == excluded_path[0:-1] or path in excluded_paths:
+                if fnmatch.fnmatch(path, excluded_path):
                     return False
         return True
 

@@ -5,7 +5,8 @@ BasicAuth Module.
 from .auth import Auth
 import re
 import base64
-from typing import Tuple
+from typing import Tuple, TypeVar
+from models.user import User
 
 
 class BasicAuth(Auth):
@@ -60,3 +61,18 @@ class BasicAuth(Auth):
                 password = re_match.group('password')
                 return user, password
         return None, None
+
+    def user_object_from_credentials(
+            self,
+            user_email: str,
+            user_pwd: str) -> TypeVar('User'):
+        """
+        A function that returns the User instance
+        based on his email and password
+        """
+        if isinstance(user_email, str) and isinstance(user_pwd, str):
+            users = User.search({'email': user_email})
+            if len(users) > 0:
+                if users[0].is_valid_password(user_pwd):
+                    return users[0]
+        return None

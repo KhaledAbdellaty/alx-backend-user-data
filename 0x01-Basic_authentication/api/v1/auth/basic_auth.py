@@ -5,6 +5,7 @@ BasicAuth Module.
 from .auth import Auth
 import re
 import base64
+from typing import Tuple
 
 
 class BasicAuth(Auth):
@@ -40,3 +41,22 @@ class BasicAuth(Auth):
                 return res.decode('utf-8')
             except UnicodeDecodeError:
                 return None
+
+    def extract_user_credentials(
+            self,
+            decoded_base64_authorization_header: str
+            ) -> Tuple[str, str]:
+        """A finction that returns the user email and
+        passowrd from the Base64 decoded value
+        """
+        if isinstance(decoded_base64_authorization_header, str):
+            pattern = r'(?P<user>[^:]+):(?P<password>.+)'
+            re_match = re.fullmatch(
+                pattern,
+                decoded_base64_authorization_header.strip()
+            )
+            if re_match:
+                user = re_match.group('user')
+                password = re_match.group('password')
+                return user, password
+        return None

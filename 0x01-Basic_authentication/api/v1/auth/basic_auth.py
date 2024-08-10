@@ -59,4 +59,4 @@ class BasicAuth(Auth):
                 user = re_match.group('user')
                 password = re_match.group('password')
                 return user, password
-        return None
+        return None, None

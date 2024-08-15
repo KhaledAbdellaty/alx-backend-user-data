@@ -48,13 +48,13 @@ class DB:
         A function that returns the first row found in
         the users table as filtered by the method’s input arguments.
         """
-        for key, _ in kwargs.items():
-            if key not in User.__dict__:
+        for key in kwargs.keys():
+            if not hasattr(User, key):
                 raise InvalidRequestError()
         user = self._session.query(User).filter_by(**kwargs).first()
-        if user is None:
-            raise NoResultFound()
-        return user
+        if user:
+            return user
+        raise NoResultFound()
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """

@@ -35,13 +35,9 @@ class DB:
         """
         A function that add new user to the database
         """
-        try:
-            user = User(email=email, hashed_password=hashed_password)
-            self.__session.add(user)
-            self.__session.commit()
-        except Exception:
-            self.__session.rollback()
-            user = None
+        user = User(email=email, hashed_password=hashed_password)
+        self._session.add(user)
+        self._session.commit()
         return user
 
     def find_user_by(self, **kwargs) -> User:

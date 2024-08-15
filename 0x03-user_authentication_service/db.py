@@ -49,29 +49,27 @@ class DB:
         A function that returns the first row found in
         the users table as filtered by the method’s input arguments.
         """
-        users = self._session.query(User)
-        for key, value in kwargs.items():
+        for key, _ in kwargs.items():
             if key not in User.__dict__:
                 raise InvalidRequestError
-            for user in users:
-                if getattr(user, key) == value:
-                    return user
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if user is None:
             raise NoResultFound
+        return user
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
         A function that update the user
         will use find_user_by to locate the user to update.
         """
-        values = {}
-        user = self.find_user_by(id=user_id)
-        if user is not None:
-            for key, value in kwargs.items():
-                if hasattr(user, key):
-                    values[getattr(User, key)] = value
-                else:
-                    raise ValueError()
-            self._session.query(User).filter(User.id == user_id).update(
-                values, synchronize_session=False,
-            )
-            self._session.commit()
+        try:
+            user = self.find_user_by(id=user_id)
+            if user is not None:
+                for key, value in kwargs.items():
+                    if hasattr(user, key):
+                        setattr(user, key, value)
+                    else:
+                        raise ValueError()
+                self._session.commit()
+        except NoResultFound:
+            raise

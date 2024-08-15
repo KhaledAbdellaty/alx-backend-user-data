@@ -2,7 +2,6 @@
 """DB module
 """
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
@@ -49,13 +48,13 @@ class DB:
         A function that returns the first row found in
         the users table as filtered by the method’s input arguments.
         """
-        if not kwargs or any(x not in User.__dict__ for x in kwargs):
-            raise InvalidRequestError
-        session = self._session
-        try:
-            return session.query(User).filter_by(**kwargs).one()
-        except Exception:
+        for key, _ in kwargs.items():
+            if key not in User.__dict__:
+                raise InvalidRequestError
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if user is None:
             raise NoResultFound
+        return user
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """

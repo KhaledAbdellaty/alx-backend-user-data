@@ -8,9 +8,11 @@ from sqlalchemy.orm.exc import NoResultFound
 AUTH = Auth()
 app = Flask(__name__)
 
+
 @app.route('/', methods=['GET'])
 def index():
     return jsonify({"message": "Bienvenue"})
+
 
 @app.route('/users', methods=['POST'])
 def user_register():

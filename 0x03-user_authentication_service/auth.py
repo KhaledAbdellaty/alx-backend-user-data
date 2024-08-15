@@ -35,7 +35,6 @@ class Auth:
         A function that check the password,
         If it matches return True. In any other case, return False.
         """
-        user = None
         try:
             user = self._db.find_user_by(email=email)
             if user is not None:

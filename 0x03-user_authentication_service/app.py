@@ -10,16 +10,16 @@ AUTH = Auth()
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index() -> str:
+    """ GET /
+    Return:
+      - welcome
     """
-    The route that GET home page's payload.
-    """
-    return jsonify({"message": "Bienvenue"})
+    return jsonify({"message": "Bienvenue"}), 200
 
 
 @app.route('/users', methods=['POST'], strict_slashes=False)
 def user_register() -> str:
     """
-    The route that POST the account creation payload.
     POST /users
     Return:
       - message

@@ -69,11 +69,19 @@ class Auth:
         """
         A function that returns the corresponding User or None.
         """
-        if session_id is not None:
+        if session_id:
             try:
                 user = self._db.find_user_by(session_id=session_id)
                 return user
-            except Exception:
+            except NoResultFound:
                 return None
         else:
             return None
+
+    def destroy_session(self, user_id: int) -> None:
+        """
+        The method updates the corresponding user’s session ID to None.
+        """
+        if user_id is None:
+            return None
+        self._db.update_user(user_id, session_id=None)

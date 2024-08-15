@@ -35,9 +35,13 @@ class DB:
         """
         A function that add new user to the database
         """
-        user = User(email=email, hashed_password=hashed_password)
-        self._session.add(user)
-        self._session.commit()
+        try:
+            user = User(email=email, hashed_password=hashed_password)
+            self._session.add(user)
+            self._session.commit()
+        except Exception:
+            self._session.rollback()
+            user = None
         return user
 
     def find_user_by(self, **kwargs) -> User:
@@ -45,13 +49,14 @@ class DB:
         A function that returns the first row found in
         the users table as filtered by the method’s input arguments.
         """
-        try:
-            user = self._session.query(User).filter_by(**kwargs).first()
-            if user is None:
+        users = self._session.query(User)
+        for key, value in kwargs.items():
+            if key not in User.__dict__:
+                raise InvalidRequestError
+            for user in users:
+                if getattr(user, key) == value:
+                    return user
                 raise NoResultFound
-        except InvalidRequestError:
-            raise
-        return user
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """

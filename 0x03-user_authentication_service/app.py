@@ -2,11 +2,10 @@
 """Flask App"""
 from flask import Flask, jsonify, request
 from auth import Auth
-from sqlalchemy.orm.exc import NoResultFound
 
 
-AUTH = Auth()
 app = Flask(__name__)
+AUTH = Auth()
 
 
 @app.route('/', methods=['GET'], strict_slashes=False)

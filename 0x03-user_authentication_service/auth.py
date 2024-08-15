@@ -24,8 +24,9 @@ class Auth:
         """
         A function that register new user.
         """
-        user = self._db.find_user_by(email=email)
-        print(user)
-        if  user is None:
+        try:
+            user = self._db.find_user_by(email=email)
+            print(user)
+        except NoResultFound:
             return self._db.add_user(email, _hash_password(password))
         raise ValueError(f"User {email} already exists")

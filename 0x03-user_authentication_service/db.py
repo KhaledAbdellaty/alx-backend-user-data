@@ -56,7 +56,7 @@ class DB:
             for user in users:
                 if getattr(user, key) == value:
                     return user
-                raise NoResultFound
+            raise NoResultFound
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """

@@ -41,7 +41,7 @@ class DB:
             self._session.commit()
         except Exception:
             self._session.rollback()
-            user = None
+            # user = None
         return user
 
     def find_user_by(self, **kwargs) -> User:
@@ -51,6 +51,7 @@ class DB:
         """
         for key, _ in kwargs.items():
             if key not in User.__dict__:
+                print(key)
                 raise InvalidRequestError
         user = self._session.query(User).filter_by(**kwargs).first()
         if user is None:
@@ -63,13 +64,18 @@ class DB:
         will use find_user_by to locate the user to update.
         """
         try:
+            values = {}
             user = self.find_user_by(id=user_id)
             if user is not None:
                 for key, value in kwargs.items():
-                    if hasattr(user, key):
-                        setattr(user, key, value)
+                    if hasattr(User, key):
+                        values[key] = value
                     else:
                         raise ValueError()
+                self._session.query(User).filter(User.id == user.id).update(
+                    values,
+                    synchronize_session=False
+                )
                 self._session.commit()
         except NoResultFound:
             raise

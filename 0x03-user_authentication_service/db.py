@@ -51,7 +51,6 @@ class DB:
         """
         for key, _ in kwargs.items():
             if key not in User.__dict__:
-                print(key)
                 raise InvalidRequestError
         user = self._session.query(User).filter_by(**kwargs).first()
         if user is None:

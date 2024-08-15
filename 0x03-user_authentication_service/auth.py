@@ -35,8 +35,14 @@ class Auth:
         A function that check the password,
         If it matches return True. In any other case, return False.
         """
+        user = None
         try:
             user = self._db.find_user_by(email=email)
-            return bcrypt.checkpw(password.encode('utf-8'), user.hashed_password)
-        except Exception:
+            if user is not None:
+                return bcrypt.checkpw(
+                    password.encode("utf-8"),
+                    user.hashed_password,
+                )
+        except NoResultFound:
             return False
+        return False

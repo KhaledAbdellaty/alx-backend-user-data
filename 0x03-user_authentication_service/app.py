@@ -54,6 +54,8 @@ def logout() -> str:
     Return:
         - Redirects to home route.
     """
+    if "session_id" in request.cookies:
+        print('Yes')
     session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
@@ -90,6 +92,23 @@ def get_reset_password_token() -> str:
     if reset_token is None:
         abort(403)
     return jsonify({"email": email, "reset_token": reset_token})
+
+
+@app.route('/reset_password', methods=['PUT'], strict_slashes=False)
+def update_password() -> str:
+    """ PUT /reset_password
+      Return:
+        - message
+    """
+    email = request.form.get('email')
+    reset_token = request.form.get('reset_token')
+    new_psw = request.form.get('new_password')
+    try:
+        AUTH.update_password(reset_token, new_psw)
+        return jsonify({"email": email,
+                        "message": "Password updated"}), 200
+    except Exception:
+        abort(403)
 
 
 if __name__ == "__main__":

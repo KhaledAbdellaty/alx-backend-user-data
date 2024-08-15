@@ -69,13 +69,12 @@ class Auth:
         """
         A function that returns the corresponding User or None.
         """
-        if session_id:
-            try:
-                user = self._db.find_user_by(session_id=session_id)
-                return user
-            except NoResultFound:
-                return None
-        else:
+        if session_id is None:
+            return None
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except NoResultFound:
             return None
 
     def destroy_session(self, user_id: int) -> None:
@@ -99,5 +98,17 @@ class Auth:
             reset_token = _generate_uuid()
             self._db.update_user(user.id, reset_token=reset_token)
             return reset_token
+        except NoResultFound:
+            raise ValueError
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """
+        A function that update the password.
+        """
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            self._db.update_user(user.id,
+                                 hashed_password=_hash_password(password),
+                                 reset_token=None)
         except NoResultFound:
             raise ValueError

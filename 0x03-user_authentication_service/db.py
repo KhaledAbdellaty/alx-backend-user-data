@@ -64,13 +64,18 @@ class DB:
         will use find_user_by to locate the user to update.
         """
         try:
+            values = {}
             user = self.find_user_by(id=user_id)
             if user is not None:
                 for key, value in kwargs.items():
                     if hasattr(user, key):
-                        setattr(user, key, value)
+                        values[getattr(User, key)] = value
                     else:
                         raise ValueError()
+                self._session.query(User).filter(User.id == user_id).update(
+                values,
+                synchronize_session=False,
+                )
                 self._session.commit()
         except NoResultFound:
             raise

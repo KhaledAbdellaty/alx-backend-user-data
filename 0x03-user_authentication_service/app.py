@@ -9,13 +9,19 @@ AUTH = Auth()
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
-def index():
+@app.route('/', methods=['GET'], strict_slashes=False)
+def index() -> str:
+    """
+    The route that GET home page's payload.
+    """
     return jsonify({"message": "Bienvenue"})
 
 
-@app.route('/users', methods=['POST'])
-def user_register():
+@app.route('/users', methods=['POST'], strict_slashes=False)
+def user_register() -> str:
+    """
+    The route that POST the account creation payload.
+    """
     email, password = request.form.get("email"), request.form.get("password")
     try:
         AUTH.register_user(email, password)

@@ -1,4 +1,4 @@
-#!/usr/bin/emnv python3
+#!/usr/bin/env python3
 """logger"""
 import re
 from typing import List

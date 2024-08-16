@@ -63,7 +63,7 @@ def filtering_request():
             auth_header = auth.authorization_header(request)
             cookies = auth.session_cookie(request)
             user = auth.current_user(request)
-            
+
             if auth_header is None and cookies is None:
                 abort(401)
             if user is None:

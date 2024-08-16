@@ -56,9 +56,8 @@ def filtering_request():
         ]
         if auth.require_auth(request.path, paths_list):
             auth_header = auth.authorization_header(request)
-            print(auth_header)
             user = auth.current_user(request)
-            request["current_user"] = user
+            setattr(request, 'current_user', user)
             if auth_header is None:
                 abort(401)
             if user is None:

@@ -4,7 +4,7 @@ A SessionAuth Module.
 """
 from .auth import Auth
 from uuid import uuid4
-from views.users import User 
+from views.users import User
 
 
 class SessionAuth(Auth):

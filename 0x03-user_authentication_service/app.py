@@ -54,15 +54,12 @@ def logout() -> str:
     Return:
         - Redirects to home route.
     """
-    if "session_id" in request.cookies:
-        print('Yes')
     session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
         abort(403)
-    else:
-        AUTH.destroy_session(user.id)
-        return redirect("/")
+    AUTH.destroy_session(user.id)
+    return redirect("/")
 
 
 @app.route("/profile", methods=["GET"], strict_slashes=False)
@@ -92,7 +89,7 @@ def get_reset_password_token() -> str:
         reset_token = None
     if reset_token is None:
         abort(403)
-    return jsonify({"email": email, "reset_token": reset_token})
+    return jsonify({"email": email, "reset_token": reset_token}), 200
 
 
 @app.route('/reset_password', methods=['PUT'], strict_slashes=False)

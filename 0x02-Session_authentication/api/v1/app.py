@@ -58,7 +58,7 @@ def filtering_request():
             auth_header = auth.authorization_header(request)
             print(auth_header)
             user = auth.current_user(request)
-            request.current_user = user
+            request["current_user"] = user
             if auth_header is None:
                 abort(401)
             if user is None:

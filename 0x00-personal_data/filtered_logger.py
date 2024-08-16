@@ -18,7 +18,7 @@ def filter_datum(fields: List[str],
     return re.sub(pattern=pattern[0], repl=repl, string=message)
 
 
-def get_logger():
+def get_logger() -> logging.Logger:
     """A function that log PII fields."""
     logger = logging.getLogger('User_data')
     stream_handler = logging.StreamHandler()

@@ -5,6 +5,7 @@ Template for all authentication system
 from flask import request
 from typing import List, TypeVar
 import fnmatch
+from os import getenv
 
 
 class Auth:
@@ -31,5 +32,11 @@ class Auth:
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
-        """A function that returns None"""
-        return None
+        """A function that returns the current user"""
+        return request.current_user
+
+    def session_cookie(self, request=None):
+        """A function that returns a cookie value from a request"""
+        if request is None:
+            return None
+        request.cookies.get(getenv('SESSION_NAME'))
